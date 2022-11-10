@@ -11,5 +11,7 @@ namespace ToyRobot
         public int X { get; init; }
         public int Y { get; init; }
         public CompassDirection Direction { get; init; }
+
+        public override string ToString() => $"Position (X = {X}, Y = {Y}, Direction = {Direction})";
     }
 }
