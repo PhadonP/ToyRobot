@@ -1,4 +1,4 @@
-﻿namespace ToyRobot;
+﻿namespace ToyRobot.Directions;
 
 public enum CompassDirection
 {

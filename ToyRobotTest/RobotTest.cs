@@ -1,8 +1,9 @@
-using ToyRobot;
+using ToyRobot.Directions;
+using ToyRobot.Robot;
 
 namespace ToyRobotTest;
 
-public class RobotTest
+internal class RobotTest
 {
     //Use different x and y for testing purposes
     private const int XTableSize = 5;

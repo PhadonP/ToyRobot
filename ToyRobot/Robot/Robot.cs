@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
+﻿using ToyRobot.Directions;
 
-namespace ToyRobot;
+namespace ToyRobot.Robot;
 
 public class Robot : IRobot
 {
@@ -35,19 +30,19 @@ public class Robot : IRobot
 
         switch (_position.Direction)
         {
-            case (CompassDirection.North):
+            case CompassDirection.North:
                 dx = 0;
                 dy = 1;
                 break;
-            case (CompassDirection.East):
+            case CompassDirection.East:
                 dx = 1;
                 dy = 0;
                 break;
-            case (CompassDirection.South):
+            case CompassDirection.South:
                 dx = 0;
                 dy = -1;
                 break;
-            case (CompassDirection.West):
+            case CompassDirection.West:
                 dx = -1;
                 dy = 0;
                 break;
@@ -102,13 +97,13 @@ public class Robot : IRobot
             compassMovement = -1;
         }
 
-        var newCompassDirection = (int) _position.Direction + compassMovement;
+        var newCompassDirection = (int)_position.Direction + compassMovement;
 
         //Wrap around the enumerable
         if (newCompassDirection == 4)
         {
             newCompassDirection = 0;
-        } 
+        }
         //The modulus sign does not work for this problem as -1 % 4 != 3 but -1 % 4 == -1
         else if (newCompassDirection == -1)
         {
@@ -117,7 +112,7 @@ public class Robot : IRobot
 
         _position = _position with
         {
-            Direction = (CompassDirection) newCompassDirection
+            Direction = (CompassDirection)newCompassDirection
         };
     }
 

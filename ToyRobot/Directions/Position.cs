@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ToyRobot
+namespace ToyRobot.Directions
 {
     public readonly struct Position
     {
@@ -12,6 +12,6 @@ namespace ToyRobot
         public int Y { get; init; }
         public CompassDirection Direction { get; init; }
 
-        public override string ToString() => $"Position (X = {X}, Y = {Y}, Direction = {Direction})";
+        public override string ToString() => $"X = {X}, Y = {Y}, Direction = {Direction}";
     }
 }
