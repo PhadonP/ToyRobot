@@ -6,7 +6,7 @@ using ToyRobot.WriterReader;
 
 namespace ToyRobotTest;
 
-internal class RobotInterpreterTests
+internal class RobotInterpreterTest
 {
     private RobotInterpreter _interpreter;
     private Mock<IRobot> _robotMock;
@@ -89,7 +89,7 @@ internal class RobotInterpreterTests
 
         var success = _interpreter.InterpretInstruction("REPORT");
 
-        _writerReaderMock.Verify(writerReader => writerReader.WriteLine("POSITION (X = 2, Y = 2, DIRECTION = EAST)"));
+        _writerReaderMock.Verify(writerReader => writerReader.WriteLine("X = 2, Y = 2, DIRECTION = EAST"));
         Assert.That(success, Is.True);
     }
 
