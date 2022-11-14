@@ -1,6 +1,7 @@
 ﻿using Moq;
 using ToyRobot.Interpreter;
 using ToyRobot.Robot;
+using ToyRobot.Runner;
 using ToyRobot.WriterReader;
 
 namespace ToyRobotTest;
@@ -9,26 +10,30 @@ internal class RobotIntegrationTest
 {
     private const int TableSize = 5;
 
-    private Robot _robot;
-    private RobotInterpreter _interpreter;
+    private LineRunner _runner;
     private Mock<IWriterReader> _writerReaderMock;
 
     [SetUp]
     public void Init()
     {
-        _robot = new Robot(TableSize, TableSize);
+        var robot = new Robot(TableSize, TableSize);
         _writerReaderMock = new Mock<IWriterReader>();
-        _interpreter = new RobotInterpreter(_robot, _writerReaderMock.Object);
+        var interpreter = new RobotInterpreter(robot, _writerReaderMock.Object);
+        _runner = new LineRunner(interpreter, _writerReaderMock.Object);
     }
 
     [Test]
     public void ReportsCorrectlyAfterSequenceOfMoves()
     {
-        _interpreter.InterpretInstruction("PLACE 2,2,NORTH");
-        _interpreter.InterpretInstruction("MOVE");
-        _interpreter.InterpretInstruction("MOVE");
-        _interpreter.InterpretInstruction("RIGHT");
-        _interpreter.InterpretInstruction("REPORT");
+        _writerReaderMock.SetupSequence(writerReader => writerReader.ReadLine())
+            .Returns("PLACE 2,2,NORTH")
+            .Returns("MOVE")
+            .Returns("MOVE")
+            .Returns("RIGHT")
+            .Returns("REPORT")
+            .Returns((string?) null);
+
+        _runner.Run();
 
         _writerReaderMock.Verify(writerReader => writerReader.WriteLine("X = 2, Y = 4, DIRECTION = EAST"));
     }
@@ -36,12 +41,31 @@ internal class RobotIntegrationTest
     [Test]
     public void ReportsNotPlacedAfterNotBeingPlacedProperly()
     {
-        _interpreter.InterpretInstruction("PLACE 6,6,SOUTH");
-        _interpreter.InterpretInstruction("MOVE");
-        _interpreter.InterpretInstruction("MOVE");
-        _interpreter.InterpretInstruction("RIGHT");
-        _interpreter.InterpretInstruction("REPORT");
+        _writerReaderMock.SetupSequence(writerReader => writerReader.ReadLine())
+            .Returns("PLACE 6,6,SOUTH")
+            .Returns("MOVE")
+            .Returns("MOVE")
+            .Returns("RIGHT")
+            .Returns("REPORT")
+            .Returns((string?)null);
+
+        _runner.Run();
 
         _writerReaderMock.Verify(writerReader => writerReader.WriteLine("ROBOT HAS NOT BEEN PLACED ON THE TABLE PROPERLY YET"));
+    }
+
+    [Test]
+    public void ReportsCommandInvalid()
+    {
+        _writerReaderMock.SetupSequence(writerReader => writerReader.ReadLine())
+            .Returns("PLAC 6,6,SOUTH")
+            .Returns("MOV")
+            .Returns("MOV")
+            .Returns("RIGHT")
+            .Returns((string?)null);
+
+        _runner.Run();
+
+        _writerReaderMock.Verify(writerReader => writerReader.WriteLine("COMMAND WAS INVALID"), Times.Exactly(3));
     }
 }
